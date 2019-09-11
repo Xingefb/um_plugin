@@ -1,8 +1,8 @@
 name: um_plugin
-description: A new flutter plugin project.
-version: 0.0.1
-author:
-homepage:
+description: A new flutter plugin project for umeng .
+version: 1.0.4
+author: loself<loselfmin@gmail.com>
+homepage: https://github.com/Xingefb/um_plugin
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

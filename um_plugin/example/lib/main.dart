@@ -12,32 +12,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
     initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      await UmPlugin.setUp('123456');
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+  initPlatformState() async {
+    // dzytest 
+    // 5d7901693fc1954a3a0009cd 安卓
+    // 57a19c3ee0f55ac1d5001732 ios
+    await UmPlugin.setUp('5d78a3ce3fc19514630008e5',channel: 'um_plugin');
     if (!mounted) return;
+  }
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  _toClickNumber() async {
+    await UmPlugin.addEvent('start', label: 'pid');
+    await UmPlugin.addEvent('end', label: 'pid');
+    if (!mounted) return;
   }
 
   @override
@@ -45,11 +37,19 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+            child: Column(
+          children: <Widget>[
+            FlatButton(
+              child: Text('add event'),
+              onPressed: () {
+                _toClickNumber();
+              },
+            ),
+          ],
+        )),
       ),
     );
   }

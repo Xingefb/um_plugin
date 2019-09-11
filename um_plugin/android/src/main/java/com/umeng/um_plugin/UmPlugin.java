@@ -6,6 +6,9 @@ import android.util.Log;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -33,8 +36,10 @@ public class UmPlugin implements MethodCallHandler {
       setup(call, result);
     } else if (call.method.equals("setAutoPageEnabled")) {
       setAutoPageEnabled(call, result);
-    }else if (call.method.equals("addEvent")) {
+    } else if (call.method.equals("addEvent")) {
       addEvent(call, result);
+    } else if (call.method.equals("eventDict")) {
+      eventDict(call, result);
     } else if (call.method.equals("beginPage")) {
       beginPageView(call, result);
     } else if (call.method.equals("endPage")) {
@@ -45,19 +50,30 @@ public class UmPlugin implements MethodCallHandler {
   }
 
   private  void  setup(MethodCall call, Result result) {
-    Log.wtf("appKey",(String) call.argument("appKey"));
-    UMConfigure.init(activity, (String) call.argument("appKey"), "Umeng", UMConfigure.DEVICE_TYPE_PHONE, null);
+    Log.wtf("um appKey",(String) call.argument("appKey"));
+    UMConfigure.init(activity, (String) call.argument("appKey"), (String) call.argument("channel"), UMConfigure.DEVICE_TYPE_PHONE, null);
+    UMConfigure.setLogEnabled(true);
   }
+
   private  void  addEvent(MethodCall call, Result result) {
-    MobclickAgent.onEvent(activity,(String) call.argument("id"));
+    MobclickAgent.onEvent(activity,(String) call.argument("eventId"), (String) call.argument("label"));
   }
+
+  private  void  eventDict(MethodCall call, Result result) {
+    HashMap<String, String> map = new HashMap<String, String>();
+    map.putAll((Map<String, String>) call.argument("dict"));
+    MobclickAgent.onEvent(activity,(String) call.argument("eventId"), map);
+  }
+
   private  void setAutoPageEnabled(MethodCall call, Result result) {
     MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
   }
+
   private  void  beginPageView(MethodCall call, Result result) {
     MobclickAgent.onPageStart((String) call.argument("name"));
     MobclickAgent.onPause(activity);
   }
+  
   private  void  endPageView(MethodCall call, Result result) {
     MobclickAgent.onPageEnd((String) call.argument("name"));
     MobclickAgent.onPause(activity);

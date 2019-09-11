@@ -18,7 +18,9 @@
         [self setAutoPageEnabledWithMethodCall:call result:result];
     } else if ([@"addEvent" isEqualToString:call.method]) {
         [self addEventWithMethodCall:call result:result];
-    } else if ([@"beginPage" isEqualToString:call.method]) {
+    } else if ([@"eventDict" isEqualToString:call.method]) {
+        [self eventDictWithMethodCall:call result:result];
+    }else if ([@"beginPage" isEqualToString:call.method]) {
         [self beginPageWithMethodCall:call result:result];
     } else if ([@"endPage" isEqualToString:call.method]) {
         [self endPageWithMethodCall:call result:result];
@@ -28,11 +30,10 @@
 }
 
 - (void)setupWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    NSLog(@"%@",call.arguments[@"appKey"]);
-    [UMConfigure initWithAppkey:call.arguments[@"appKey"] channel:@"Umeng"];
+    NSLog(@"um appkey%@",call.arguments[@"appKey"]);
+    [UMConfigure initWithAppkey:call.arguments[@"appKey"] channel:call.arguments[@"channel"]];
     [UMConfigure setEncryptEnabled:YES];
 }
-
 - (void)beginPageWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     [MobClick beginEvent:call.arguments[@"name"]];
 }
@@ -40,7 +41,11 @@
     [MobClick beginEvent:call.arguments[@"name"]];
 }
 - (void)addEventWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    [MobClick event:call.arguments[@"id"] label:call.arguments[@"pid"]];
+    [MobClick event:call.arguments[@"eventId"] label:call.arguments[@"label"]];
+}
+- (void)eventDictWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+    [MobClick event:call.arguments[@"eventId"] attributes:call.arguments[@"dict"]];
+//    [MobClick event:call.arguments[@"id"]];
 }
 - (void)setAutoPageEnabledWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     [MobClick setAutoPageEnabled:YES];
