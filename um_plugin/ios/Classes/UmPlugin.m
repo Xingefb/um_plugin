@@ -40,7 +40,7 @@
     [MobClick beginEvent:call.arguments[@"name"]];
 }
 - (void)addEventWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    [MobClick beginEvent:call.arguments[@"id"]];
+    [MobClick event:call.arguments[@"id"] label:call.arguments[@"pid"]];
 }
 - (void)setAutoPageEnabledWithMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     [MobClick setAutoPageEnabled:YES];
